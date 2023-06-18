@@ -26,16 +26,15 @@ Dieses Projekt dient als Demonstrationsbeispiel für unseren Vortrag über `Secu
     DocumentRoot /var/www/html
 
     <Directory /var/www/html>
-        Options Indexes FollowSymLinks
-        AllowOverride None
-        #Require all granted
-        # php_admin_value open_basedir /var/www/html
-        # php_admin_value doc_root /
+        Options Indexes FollowSymLinks          # erlaubt indexing durch webserver
+        # php_admin_value open_basedir /var/www/html    # Limitiert PHP Dateisystemzugriffe auf webroot
+        # php_admin_value doc_root /            # Updated PHP Dateisystem root
     </Directory>
 
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
+
 ```
 
 ## docker-compose.yml
@@ -50,22 +49,17 @@ services:
       - ./:/var/www/html/
       - ./test-httpd.conf:/etc/apache2/sites-available/000-default.conf
     restart: unless-stopped
-    ports:
-      - 8080:80
 ```
 
 # Getting started
 
+Im Projektverzeichnise 
+> `docker-compose up -d`  
 
->Im Projektverzeichnis  
-`docker-compose up -d`  
 ausführen.
 
 
-> zum neustarten  
-`docker-compose restart`
-
-Webseite findet sich unter [http://localhost:8080/mysite](http://localhost:8080/mysite)
+Webseite findet sich unter [http://localhost/mysite](http://localhost/mysite)
 
 # PHP Injection Beispiele
 
@@ -102,6 +96,11 @@ function list_directory($directory, $level = 0, $prefix = '') {
         echo $prefix . ($isLast ? '└── ' : '├── ') . $file;
 
         $path = $directory . '/' . $file;
+
+        if (!file_exists($path) || !is_readable($path)) {
+            echo " (not readable or doesnt exist) <br>";
+            continue;
+        }
 
         // Display file details similar to 'ls -la'
         $info = new SplFileInfo($path);
@@ -145,7 +144,7 @@ if ($file) {
 
 ## Wie verhindern?
 - Dokumentation lesen / System verstehen
-- Entwicklungsumgebung und Produktivumgebung *trennen*
-- Immer nur das *mindeste* an Berechtigungen geben
+- Entwicklungsumgebung und Produktivumgebung trennen
+- Immer nur das mindeste an Berechtigungen geben
 - `Best practice` verwenden
 - ...
