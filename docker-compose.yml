@@ -1,0 +1,9 @@
+version: '3.1'
+
+services:
+  php:
+    image: php:apache
+    volumes:
+      - ./:/var/www/html/
+      - ./test-httpd.conf:/etc/apache2/sites-available/000-default.conf
+    restart: unless-stopped
