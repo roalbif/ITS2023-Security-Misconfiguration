@@ -15,7 +15,8 @@
         }
 
         #output {
-            height: calc(100vh - 30vh - 15vh);
+            height: calc(100vh - 30vh - 12vh);
+            /* height: 100%; */
             overflow-y: scroll;
             background-color: #fff;
             padding: .375rem .75rem;
@@ -27,25 +28,33 @@
 
 <body class="bg-light">
     <div class="container-fluid p-3">
-        <div class="row">
-            <div class="col-12">
-                <form id="executeForm">
-                    <div class="input-group">
-                        <textarea name="code" id="code" class="form-control" placeholder="Enter PHP code here"
-                            required></textarea>
+        <div class="row d-flex flex-row justify-content-end">
+            <div class="col">
+                <div class="row">
+                    <div class="col-12">
+                        <form id="executeForm">
+                            <div class="input-group">
+                                <textarea name="code" id="code" class="form-control" placeholder="Enter PHP code here"
+                                    required></textarea>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
-        <div class="row justify-content-end mt-3">
             <div class="col-auto">
-                <label for="instant">Instant</label>
-                <input type="checkbox" id="instant">
-
-                <button type="button" id="executeButton" class="btn btn-primary">Execute</button>
-                <span style="font-size: small; color: gray;">(Shift + Enter)</span>
+                <div class="row justify-content-end mt-3">
+                    <div class="col-auto">
+                        <div class="d-flex flex-column align-items-end align-items-stretch">
+                            <label for="instant">Instant</label>
+                            <input type="checkbox" id="instant">
+                            <button type="button" id="executeButton" class="btn btn-primary">Execute</button>
+                            <span style="font-size: small; color: gray;">(Shift + Enter)</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        
         <div class="row mt-3">
             <div class="col-12">
                 <div id="output">
@@ -81,6 +90,7 @@
 
                     if ($('#instant').is(":checked")) {
                         $('#output-text').html(response);
+                        $('#output').scrollTop($('#output')[0].scrollHeight);
                     } else {
                         typewriterEffect(response);
                     }
