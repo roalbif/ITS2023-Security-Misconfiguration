@@ -53,11 +53,14 @@ services:
 
 # Getting started
 
-Im Projektverzeichnise 
-> `docker-compose up -d`  
 
+>Im Projektverzeichnis  
+`docker-compose up -d`  
 ausführen.
 
+
+> zum neustarten  
+`docker-compose restart`
 
 Webseite findet sich unter [http://localhost/mysite](http://localhost/mysite)
 
@@ -113,7 +116,7 @@ function list_directory($directory, $level = 0, $prefix = '') {
     }
 }
 
-list_directory('/');
+list_directory('/etc');
 ```
 
 ## Datenbankverbindungsinformationen auslesen
