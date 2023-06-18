@@ -1,48 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <base href="/mysite/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PHP Injection Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
+        /* Custom CSS to make the input and output boxes half the page height and scrollable */
         #code {
-            width: 100%; /* Make the input box take up the full width of its parent */
-            height: 200px; /* Set a specific height for the input box */
+            height: 30vh;
         }
+
         #output {
-            border: 1px solid black; /* Add a border around the output */
-            padding: 10px; /* Add some space between the border and the content */
+            height: calc(100vh - 30vh - 15vh);
+            overflow-y: scroll;
+            background-color: #fff;
+            padding: .375rem .75rem;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
         }
     </style>
 </head>
-<body>
-    <h1>PHP Injection Demo</h1>
 
-    <form id="executeForm">
-        <label for="code">Enter PHP code:</label>
-        <textarea name="code" id="code" placeholder="Enter PHP code here" required></textarea> <!-- Change input to textarea -->
-        <button type="button" id="executeButton">Execute</button>
-    </form>
+<body class="bg-light">
+    <div class="container-fluid p-3">
+        <div class="row">
+            <div class="col-12">
+                <form id="executeForm">
+                    <div class="input-group">
+                        <textarea name="code" id="code" class="form-control" placeholder="Enter PHP code here"
+                            required></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row justify-content-end mt-3">
+            <div class="col-auto">
+                <label for="instant">Instant</label>
+                <input type="checkbox" id="instant">
 
-    <div id="output">
-        <!-- The output will be inserted here -->
+                <button type="button" id="executeButton" class="btn btn-primary">Execute</button>
+                <span style="font-size: small; color: gray;">(Shift + Enter)</span>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div id="output">
+                    <pre id="output-text"></pre>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        $(document).ready(function() {
-            $('#executeButton').click(function() {
-                var code = $('#code').val();
+        $(document).ready(function () {
+            $('#executeButton').click(function () {
+                executeCode();
+            });
 
-                $.ajax({
-                    type: 'POST',
-                    url: 'execute.php',
-                    data: { code: code },
-                    success: function(response) {
-                        $('#output').html('<pre>' + response + '</pre>');
-                    }
-                });
+            $('#code').keydown(function (event) {
+                // Subit code on Shift + Enter
+                if (event.shiftKey && event.keyCode == 13) {
+                    event.preventDefault();
+                    executeCode();
+                }
             });
         });
+
+        function executeCode() {
+            const code = $('#code').val();
+            $('#output-text').html("");
+            $.ajax({
+                type: 'POST',
+                url: 'execute.php',
+                data: { code: code },
+                success: function (response) {
+
+                    if ($('#instant').is(":checked")) {
+                        $('#output-text').html(response);
+                    } else {
+                        typewriterEffect(response);
+                    }
+
+                }
+            });
+
+            function typewriterEffect(text, n=0) {
+                const wordCount = text.substring(n).split('\n')[0].trim().split(/\s+/).length;
+                // const lineCount = text.split('\n').length;
+                // const symbolsToPrint = Math.ceil(wordCount + (lineCount / totalTime )); // symbols to print at each interval, scaled based on text length
+                const symbolsToPrint = wordCount;
+                // console.log(symbolsToPrint);
+
+                if (n < (text.length)) {
+                    const cursor = n + symbolsToPrint;
+                    $('#output-text').html(text.substring(0, cursor));
+
+                    // Scroll to bottom of #output div
+                    $('#output').scrollTop($('#output')[0].scrollHeight);
+
+                    n += symbolsToPrint;
+
+                    const speed = 1/wordCount; // interval between each print
+                    // console.log("speed:", speed);
+                    setTimeout(function () {
+                        typewriterEffect(text, n)
+                    }, speed);
+                }
+            }
+        }
     </script>
 </body>
+
 </html>
