@@ -99,7 +99,7 @@
             });
 
             function typewriterEffect(text, n=0) {
-                const wordCount = text.substring(n).split('\n')[0].trim().split(/\s+/).length;
+                const wordCount = text.substring(n, text.length).split('\n')[0].trim().split(/\s+/).length;
                 // const lineCount = text.split('\n').length;
                 // const symbolsToPrint = Math.ceil(wordCount + (lineCount / totalTime )); // symbols to print at each interval, scaled based on text length
                 const symbolsToPrint = wordCount;
@@ -118,6 +118,7 @@
                     // console.log("speed:", speed);
                     setTimeout(function () {
                         typewriterEffect(text, n)
+                        // console.log(speed);
                     }, speed);
                 }
             }
