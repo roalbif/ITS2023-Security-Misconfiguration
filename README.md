@@ -53,13 +53,16 @@ services:
 
 # Getting started
 
-Im Projektverzeichnise 
-> `docker-compose up -d`  
 
+
+> Im Projektverzeichnis  
+`docker-compose up -d`  
 ausführen.
 
+> Webserver neustarten  
+`docker-compose restart`  
 
-Webseite findet sich unter [http://localhost/mysite](http://localhost/mysite)
+Webseite findet sich unter [http://localhost:8080/mysite](http://localhost:8080/mysite)
 
 # PHP Injection Beispiele
 
@@ -144,7 +147,7 @@ if ($file) {
 
 ## Wie verhindern?
 - Dokumentation lesen / System verstehen
-- Entwicklungsumgebung und Produktivumgebung trennen
-- Immer nur das mindeste an Berechtigungen geben
-- `Best practice` verwenden
+- Entwicklungsumgebung und Produktivumgebung *trennen*
+- Immer nur das *mindeste* an Berechtigungen geben
+- `Best practice` *verwenden*
 - ...
